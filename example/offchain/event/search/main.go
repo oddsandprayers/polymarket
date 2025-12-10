@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"time"
 
 	"github.com/oddsandprayers/polymarket/client"
 	"github.com/oddsandprayers/polymarket/client/offchain/event"
@@ -16,7 +17,14 @@ import (
 //
 
 //
-//     go run example/offchain/event/search/main.go
+//     go run example/offchain/event/search/main.go | jq '.[].id'
+//
+//     "16483"
+//     "16503"
+//     "16502"
+//     "16502"
+//     "16516"
+//     "16519"
 //
 
 func main() {
@@ -30,9 +38,12 @@ func main() {
 	var opt event.Option
 	{
 		opt = event.Option{
-			Tag: "100350",
+			Tag: "100350", // soccer
 			Clo: true,
-			Lim: 2,
+			Ord: "startDate",
+			Asc: true,
+			Sta: time.Date(2025, time.January, 1, 0, 0, 0, 0, time.UTC),
+			Lim: 3,
 		}
 	}
 
@@ -45,6 +56,30 @@ func main() {
 	}
 
 	var byt []byte
+	{
+		byt, err = json.MarshalIndent(res, "", "  ")
+		if err != nil {
+			tracer.Panic(tracer.Mask(err))
+		}
+	}
+
+	{
+		fmt.Printf("%s\n", byt)
+	}
+
+	// Fetch the next page of events again using the start date as cursor.
+
+	{
+		opt.Sta = res[len(res)-1].Start
+	}
+
+	{
+		res, err = cli.Offchain().Event().Search(opt)
+		if err != nil {
+			tracer.Panic(tracer.Mask(err))
+		}
+	}
+
 	{
 		byt, err = json.MarshalIndent(res, "", "  ")
 		if err != nil {
