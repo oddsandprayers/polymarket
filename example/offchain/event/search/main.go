@@ -1,8 +1,3 @@
-# polymarket
-
-Golang Polymarket Client
-
-```golang
 package main
 
 import (
@@ -13,6 +8,16 @@ import (
 	"github.com/oddsandprayers/polymarket/client/offchain/event"
 	"github.com/xh3b4sd/tracer"
 )
+
+//
+//     curl --request GET \
+//          --url 'https://gamma-api.polymarket.com/events?tag_id=100350&limit=2&closed=true' \
+//          | jq .
+//
+
+//
+//     go run example/offchain/event/search/main.go
+//
 
 func main() {
 	var err error
@@ -51,4 +56,3 @@ func main() {
 		fmt.Printf("%s\n", byt)
 	}
 }
-```
