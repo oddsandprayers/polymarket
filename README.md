@@ -25,7 +25,7 @@ func main() {
 	var opt event.Option
 	{
 		opt = event.Option{
-			Tag: "100350",
+			Tag: "100350", // soccer
 			Clo: true,
 			Lim: 2,
 		}
