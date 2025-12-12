@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"time"
 
 	"github.com/oddsandprayers/polymarket/client"
 	"github.com/oddsandprayers/polymarket/client/offchain/event"
@@ -19,12 +18,19 @@ import (
 //
 //     go run example/offchain/event/search/main.go | jq '.[].id'
 //
-//     "16483"
-//     "16503"
-//     "16502"
-//     "16502"
-//     "16516"
-//     "16519"
+//     "12137"
+//     "12138"
+//     "12139"
+//     "12140"
+//     "12141"
+//     "12142"
+//     <repeat>
+//     "12137"
+//     "12138"
+//     "12139"
+//     "12140"
+//     "12141"
+//     "12142"
 //
 
 func main() {
@@ -40,10 +46,10 @@ func main() {
 		opt = event.Option{
 			Tag: "100350", // soccer
 			Clo: true,
-			Ord: "startDate",
+			Ord: "id",
 			Asc: true,
-			Sta: time.Date(2025, time.January, 1, 0, 0, 0, 0, time.UTC),
 			Lim: 3,
+			Off: 0,
 		}
 	}
 
@@ -67,10 +73,35 @@ func main() {
 		fmt.Printf("%s\n", byt)
 	}
 
-	// Fetch the next page of events again using the start date as cursor.
+	// Fetch the next page of events again using the sorted offset as cursor.
 
 	{
-		opt.Sta = res[len(res)-1].Start
+		opt.Off = 3
+	}
+
+	{
+		res, err = cli.Offchain().Event().Search(opt)
+		if err != nil {
+			tracer.Panic(tracer.Mask(err))
+		}
+	}
+
+	{
+		byt, err = json.MarshalIndent(res, "", "  ")
+		if err != nil {
+			tracer.Panic(tracer.Mask(err))
+		}
+	}
+
+	{
+		fmt.Printf("%s\n", byt)
+	}
+
+	// Fetch the the above results in one go to verify that we get the same result.
+
+	{
+		opt.Lim = 6
+		opt.Off = 0
 	}
 
 	{
