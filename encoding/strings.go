@@ -12,29 +12,39 @@ type Strings []string
 func (s *Strings) UnmarshalJSON(byt []byte) error {
 	var err error
 
+	// Accept empty values.
+
+	if len(byt) == 0 || bytes.Equal(byt, []byte(`""`)) {
+		return nil
+	}
+
+	// Accept JSON null values.
+
 	if bytes.Equal(byt, []byte("null")) {
 		return nil
 	}
 
-	var str string
-	{
-		err = json.Unmarshal(byt, &str)
-		if err != nil {
-			return tracer.Mask(err)
-		}
-	}
+	// Accept typed string slices.
 
-	if str == "" {
+	if byt[0] != '[' {
+		var str string
 		{
-			*s = nil
+			err = json.Unmarshal(byt, &str)
+			if err != nil {
+				return tracer.Mask(err)
+			}
 		}
 
-		return nil
+		{
+			byt = []byte(str)
+		}
 	}
+
+	// Accept JSON encoded strings.
 
 	var lis []string
 	{
-		err = json.Unmarshal([]byte(str), &lis)
+		err = json.Unmarshal(byt, &lis)
 		if err != nil {
 			return tracer.Mask(err)
 		}
