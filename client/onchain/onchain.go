@@ -3,7 +3,9 @@ package onchain
 import (
 	"fmt"
 	"net/http"
+	"strings"
 
+	"github.com/oddsandprayers/polymarket/client/onchain/condition"
 	"github.com/xh3b4sd/tracer"
 )
 
@@ -21,7 +23,9 @@ type Config struct {
 	Url string
 }
 
-type Onchain struct{}
+type Onchain struct {
+	con *condition.Condition
+}
 
 func New(c Config) *Onchain {
 	if c.Cli == nil {
@@ -34,15 +38,16 @@ func New(c Config) *Onchain {
 		tracer.Panic(tracer.Mask(fmt.Errorf("%T.Url must not be empty", c)))
 	}
 
-	// TODO add e.g. Condition service
-	// var req *Request
-	// {
-	// 	req = &Request{
-	// 		cli: c.Cli,
-	// 		key: c.Key,
-	// 		url: strings.TrimSuffix(strings.TrimSpace(c.Url), "/"),
-	// 	}
-	// }
+	var req *Request
+	{
+		req = &Request{
+			cli: c.Cli,
+			key: c.Key,
+			url: strings.TrimSuffix(strings.TrimSpace(c.Url), "/"),
+		}
+	}
 
-	return &Onchain{}
+	return &Onchain{
+		con: condition.New(condition.Config{Req: req}),
+	}
 }
