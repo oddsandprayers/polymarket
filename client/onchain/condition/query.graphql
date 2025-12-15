@@ -1,0 +1,8 @@
+query GetConditions($ids: [Bytes!]!) {
+  conditions(where: { id_in: $ids }) {
+    id
+    outcomeSlotCount
+    payoutNumerators
+    payoutDenominator
+  }
+}
