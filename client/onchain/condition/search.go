@@ -53,7 +53,7 @@ func (e *Condition) Search(opt Option) ([]Object, error) {
 	}
 
 	for _, x := range res.Data.Conditions {
-		if x.Id == "" {
+		if x.ID == "" {
 			return nil, tracer.Mask(searchError, tracer.Context{Key: "reason", Value: "condition ID must not be empty"})
 		}
 	}
