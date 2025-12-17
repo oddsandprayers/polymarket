@@ -4,10 +4,8 @@ import (
 	"net/url"
 	"strconv"
 	"time"
-)
 
-const (
-	Layout = "2006-01-02T15:04:05.999999Z"
+	"github.com/oddsandprayers/polymarket/request"
 )
 
 // Option defines the URL query parameters for searching events according to
@@ -55,7 +53,7 @@ func (o Option) Query() url.Values {
 	}
 
 	if !o.Sta.IsZero() {
-		qry.Add("start_date_min", o.Sta.Format(Layout))
+		qry.Add("start_date_min", o.Sta.Format(request.Layout))
 	}
 
 	if o.Lim != 0 {

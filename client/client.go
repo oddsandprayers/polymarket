@@ -50,7 +50,7 @@ func New(c Config) *Client {
 		}),
 		off: offchain.New(offchain.Config{
 			Cli: c.Cli,
-			// NOTE Polymarket has no API auth
+			// Note that Polymarket has no API auth for reading data.
 			Url: string(PolymarketApiUrl),
 		}),
 	}

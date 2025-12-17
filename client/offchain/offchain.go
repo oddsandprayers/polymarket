@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/oddsandprayers/polymarket/client/offchain/event"
+	"github.com/oddsandprayers/polymarket/client/offchain/token"
 	"github.com/xh3b4sd/tracer"
 )
 
@@ -21,6 +22,7 @@ type Config struct {
 
 type Offchain struct {
 	eve *event.Event
+	tok *token.Token
 }
 
 func New(c Config) *Offchain {
@@ -41,5 +43,6 @@ func New(c Config) *Offchain {
 
 	return &Offchain{
 		eve: event.New(event.Config{Req: req}),
+		tok: token.New(token.Config{Req: req}),
 	}
 }
