@@ -29,6 +29,14 @@ type Object struct {
 //	    ]
 //	}
 func (o Object) Winner() int {
+	if o.Payout == "" {
+		return -1
+	}
+
+	if o.Slots != len(o.Outcomes) {
+		return -1
+	}
+
 	for i, x := range o.Outcomes {
 		if x == o.Payout {
 			return i
